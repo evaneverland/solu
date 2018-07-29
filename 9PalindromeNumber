@@ -1,0 +1,16 @@
+class Solution {
+    public boolean isPalindrome(int x) {
+        if(x<0 || (x>0 && x%10 == 0)) return false;
+        else if(x<9) return true;
+        int rev=0;
+        int num=x;
+        while(rev<x)
+        {
+            rev=rev*10+x%10;
+            x/=10;
+        }
+        return rev==x || rev/10 == x;
+    }
+}
+//the orginal x is getting rid of its last digit each time,
+//the reversed x is multiplying itself by 10 and add the digit just reduced each time
