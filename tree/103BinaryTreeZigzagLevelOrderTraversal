@@ -1,0 +1,51 @@
+--------------------BSF version
+public class Solution {
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) 
+    {
+        List<List<Integer>> sol = new ArrayList<>();
+        travel(root, sol, 0);
+        return sol;
+    }
+    
+    private void travel(TreeNode curr, List<List<Integer>> sol, int level)
+    {
+        if(curr == null) return;
+        
+        if(sol.size() <= level)
+        {
+            List<Integer> newLevel = new LinkedList<>();
+            sol.add(newLevel);
+        }
+        
+        List<Integer> collection  = sol.get(level);
+        if(level % 2 == 0) collection.add(curr.val);
+        else collection.add(0, curr.val);
+        
+        travel(curr.left, sol, level + 1);
+        travel(curr.right, sol, level + 1);
+    }
+}
+
+--------------------DSF version
+class Solution {
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> result=new ArrayList<List<Integer>>();//do I need to specify element type?
+        levelOrderHelper(root,0,result);
+        return result;
+    }
+    private void levelOrderHelper(TreeNode root,int levelIndex,List<List<Integer>> result){
+        if(root!=null){
+            if(result.size()<=levelIndex){
+                ArrayList<Integer> levelResult=new ArrayList<Integer>();
+                result.add(levelResult);
+            }
+                List<Integer> levelResult=result.get(levelIndex);
+            //use visit every element in the same order, but add them to the start of the layer list when 
+                if(levelIndex%2==0 )levelResult.add(root.val);
+                else levelResult.add(0,root.val);
+            
+        levelOrderHelper(root.left,levelIndex+1,result);
+        levelOrderHelper(root.right,levelIndex+1,result);
+        }
+    }
+}
