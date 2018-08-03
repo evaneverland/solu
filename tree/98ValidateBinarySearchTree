@@ -3,17 +3,6 @@ package test;
 import java.util.LinkedList;
 import java.util.Queue;
 
-/* -----------------------------------
- *  WARNING:
- * -----------------------------------
- *  Your code may fail to compile
- *  because it contains public class
- *  declarations.
- *  To fix this, please remove the
- *  "public" keyword from your class
- *  declarations.
- */
-
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
@@ -24,11 +13,49 @@ import java.util.Queue;
  * }
  */
 
+
 class Solution {
+    TreeNode prev=null;
     public boolean isValidBST(TreeNode root) {
-//to be add
+        //method1: implement an in-order traverse and record the previous node visited whose value should be less the value of the current node
+        if(root==null) return true;
+        /*if(isValidBST(root.left)){
+            if(prev!=null&& prev.val>=root.val) return false;
+            else prev=root;//prev=null||prev.val<root.val
+        }else{
+            return false;
+        }*/
+        if(!isValidBST(root.left)) return false;//for recursion, there is no need to have else when there is return statement
+        if(prev!=null&& prev.val>=root.val) return false;
+        prev=root;//prev=null||prev.val<root.val
+        return isValidBST(root.right);
     }
 }
+
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        //method2: start from the root node and check if its child is within a certain range certified by the root node
+        return isWithinRange(root,Long.MIN_VALUE,Long.MAX_VALUE);
+        //we'd better use long here, otherwise for Integer.MAX_VALUE which should have returned a true, we might have a false back.
+        
+    }
+    public boolean isWithinRange(TreeNode root, long lowerBd, long higherBd){
+        if(root==null) return true;//thus we can use root.* confidently
+        if(!isWithinRange(root.left,lowerBd,root.val)) return false;
+        if(root.val>=higherBd||root.val<=lowerBd) return false;
+        return isWithinRange(root.right,root.val,higherBd);
+        /*if (root.val >= maxVal || root.val <= minVal) return false;
+        return isValidBST(root.left, minVal, root.val) && isValidBST(root.right, root.val, maxVal);*/
+    }
+}
+
+
+
+
+
+
+
+
 
 public class MainClass {
     public static TreeNode stringToTreeNode(String input) {
