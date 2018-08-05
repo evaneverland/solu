@@ -1,3 +1,23 @@
+class Solution(object):
+def zigzagLevelOrder(self, root):
+    """
+    :type root: TreeNode
+    :rtype: List[List[int]]
+    """
+    if not root: return []
+    res, temp, queue, flag=[], [], [root], 1
+    while stack:
+        for i in xrange(len(stack)):
+            node=queue.pop(0)
+            temp+=[node.val]
+            if node.left: queue+=[node.left]
+            if node.right: queue+=[node.right]
+        res+=[temp[::flag]] #[start:end:stepSize]
+        temp=[]
+        flag*=-1
+    return res
+
+
 --------------------BSF version
 public class Solution {
 public List<List> zigzagLevelOrder(TreeNode root) {
