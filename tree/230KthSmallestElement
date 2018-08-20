@@ -1,0 +1,22 @@
+//recursive method, the method I attempted to implement in the first place
+class Solution {
+    private int res;
+    private int count;//count is not a local variable, which means it will assign a value to result only once since count==0 only once
+    public int kthSmallest(TreeNode root, int k) {
+        count=k;
+        helper(root);
+        return res;
+    }
+    private void helper(TreeNode root){//set helper to be a void function and res not as a local variable to deal with "return"
+        if(root==null) return;
+        if(root.left!=null) helper(root.left);
+        count--;//go to the left most under this root and count--, could be the root itself
+        if(count==0) {res=root.val; return;}
+        if(root.right!=null) helper(root.right);//sent root.right as the new root to go through the above process
+    }
+}
+
+//binary search method, We consider that the root is the pivot,
+and find the number of the nodes in the left subtree
+and the number of the nodes in the right subtree,
+then go into the subtree that the Kth Smallest Value Node belongs to.
