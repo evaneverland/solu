@@ -1,4 +1,5 @@
 //recursive method, the method I attempted to implement in the first place
+//an inorder traversal of BST will generate an ascending array
 class Solution {
     private int res;
     private int count;//count is not a local variable, which means it will assign a value to result only once since count==0 only once
@@ -9,14 +10,67 @@ class Solution {
     }
     private void helper(TreeNode root){//set helper to be a void function and res not as a local variable to deal with "return"
         if(root==null) return;
-        if(root.left!=null) helper(root.left);
+        helper(root.left);
         count--;//go to the left most under this root and count--, could be the root itself
         if(count==0) {res=root.val; return;}
-        if(root.right!=null) helper(root.right);//sent root.right as the new root to go through the above process
+        helper(root.right);//sent root.right as the new root to go through the above process
     }
 }
+
+//iterative method, the method I attempted to implement in the first place
+//
+class Solution {
+    //iterative in-order traversal of the tree
+    public int kthSmallest(TreeNode root, int k) {
+        Stack<TreeNode> myStack=new Stack<TreeNode>();
+        TreeNode curr=root;
+        while(!myStack.isEmpty()||curr!=null){
+            //go all the way to the left, think of recursion, push all the nodes along the way into the stack for later visit
+            while(curr!=null){
+                myStack.push(curr);
+                curr=curr.left;
+            }
+            //now curr is null, assign curr the top of the stack
+            curr=myStack.pop();
+            k--;
+            if(k==0) return curr.val;
+            //if curr.right==null, then in the next iteration, curr will be will its parent, so :leftChild-->node--
+            //if curr.right!=null, then in the next iteration, we will treat its right as a root, so:node-->rightChild
+            curr=curr.right;
+        }
+        return 0;
+    }
+}
+
 
 //binary search method, We consider that the root is the pivot,
 and find the number of the nodes in the left subtree
 and the number of the nodes in the right subtree,
 then go into the subtree that the Kth Smallest Value Node belongs to.
+class Solution {
+    public int kthSmallest(TreeNode root, int k) {
+        int count=counter(root.left);
+        if(count>k-1){
+            //when the number of nodes on the left of root is larger than k-1,
+            //it means the kth smallest is among the left subtree
+            //and the k th smallest of the tree is the k th smallest of its left subtree
+            return kthSmallest(root.left,k);            
+        }else if(count<k-1){
+            //when the number of nodes on the right of root is smaller than k-1,
+            //it means the the kth smallest is among the right subtree
+            //since we know that root and all the nodes on its left subtree are the top count+1 smallest,
+            //we find the k-(count+1) th smallest of the right subtree
+            return kthSmallest(root.right,k-(count+1));
+        }else{
+            //when the number of nodes on the left of root ==k-1,
+            //then the root is the kth Smallest
+            return root.val;
+        }    
+    }
+    private int counter(TreeNode root){
+        if(root==null) return 0;
+        return 1+counter(root.left)+counter(root.right);
+    }
+}
+
+
